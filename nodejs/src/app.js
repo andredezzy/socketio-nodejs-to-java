@@ -21,13 +21,10 @@ const sendEventController = require("./controllers/sendEventController");
 app.post("/send", sendEventController.sendEvent);
 
 io.on("connection", socket => {
-    console.log("a user was connected");
+    console.log("a capturer was connected");
 
-    socket.on("sent_event", eventData => {
-        console.log(eventData);
-    });
-    socket.on("disconnect", eventData => {
-        console.log("a user was disconnected");
+    socket.on("disconnect", () => {
+        console.log("a capturer was disconnected");
     });
 });
 

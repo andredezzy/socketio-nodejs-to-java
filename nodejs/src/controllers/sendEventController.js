@@ -1,7 +1,7 @@
 module.exports = {
     async sendEvent(req, res, next) {
         try {
-            req.io.emit("sent_event", req.body);
+            req.io.emit("custom-event", req.body);
 
             return res.status(200).json(req.body);
         } catch {
