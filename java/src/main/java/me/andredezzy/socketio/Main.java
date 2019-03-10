@@ -14,6 +14,9 @@ public class Main {
 
     private static EventCapturerManager eventCapturerManager;
 
+    /**
+     * Starting the capturer
+     */
     public static void main(String[] args) throws URISyntaxException {
         final Socket socket = IO.socket("http://localhost:3000");
 
@@ -26,7 +29,12 @@ public class Main {
         System.out.println("Event capturer has been started!\n");
     }
 
-    private static void capture(Object... objects){
+    /**
+     * Validate the object and check if has a capturer registered with the same title
+     *
+     * @param objects
+     */
+    private static void capture(Object... objects) {
         try {
             JSONTokener tokener = new JSONTokener(objects[0].toString());
             JSONObject object = new JSONObject(tokener);
