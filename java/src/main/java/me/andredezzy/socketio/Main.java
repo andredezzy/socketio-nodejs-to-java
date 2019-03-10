@@ -3,12 +3,10 @@ package me.andredezzy.socketio;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import me.andredezzy.socketio.manager.EventCapturerManager;
-import me.andredezzy.socketio.model.EventCapturer;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
+import me.andredezzy.socketio.validator.EventObjectValidator;
 
 import java.net.URISyntaxException;
+import java.util.Arrays;
 
 public class Main {
 
@@ -23,33 +21,21 @@ public class Main {
         eventCapturerManager = new EventCapturerManager();
         eventCapturerManager.add(new ExampleCapturer());
 
-        socket.on("custom-event", Main::capture);
+        socket.on("custom-event", Main::validateThenCapture);
         socket.connect();
 
         System.out.println("Event capturer has been started!\n");
     }
 
     /**
-     * Validate the object and check if has a capturer registered with the same title
+     * Validate the objects then capture them
      *
      * @param objects
      */
-    private static void capture(Object... objects) {
-        try {
-            JSONTokener tokener = new JSONTokener(objects[0].toString());
-            JSONObject object = new JSONObject(tokener);
-
-            String title = object.getString("title");
-
-            EventCapturer eventCapturerByKey = eventCapturerManager.getByKey(title);
-
-            if (eventCapturerByKey != null) {
-                JSONObject contentObject = object.getJSONObject("content");
-
-                eventCapturerByKey.call(contentObject);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    private static void validateThenCapture(Object... objects) {
+        Arrays.stream(objects).map(it -> new EventObjectValidator(it, eventCapturerManager))
+            .filter(EventObjectValidator::hasTitleElement)
+            .filter(EventObjectValidator::hasCapturer)
+            .forEach(EventObjectValidator::capture);
     }
 }

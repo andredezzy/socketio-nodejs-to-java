@@ -16,8 +16,4 @@ public abstract class Manager<T> {
     public void remove(T t) {
         elements.remove(t);
     }
-
-    public boolean exists(T t) {
-        return elements.contains(t);
-    }
 }
