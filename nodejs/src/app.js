@@ -18,7 +18,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 const sendEventController = require("./controllers/sendEventController");
 
-app.post("/send", sendEventController.sendEvent);
+app.post(process.env.EVENT_EMITTER_ENDPOINT, sendEventController.sendEvent);
 
 io.on("connection", socket => {
     console.log("a capturer was connected");
